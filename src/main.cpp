@@ -2,6 +2,7 @@
 #include <LedControl.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "pitches.h"
 
 //　ブザー設定
 const int BUZZER = 12;
@@ -16,7 +17,7 @@ const int CS_PIN = 9;   // チップセレクト
 // ゲーム設定
 const int MATRIX_SIZE = 8;     // ドットLEDマトリックスのサイズ
 const int PADDLE_HEIGHT = 2;   // パドルの高さ
-const int BALL_DELAY = 150;    // ボールの移動速度（ミリ秒）
+int BALL_DELAY = 150;    // ボールの移動速度（ミリ秒）
 
 // パドルの初期位置
 int paddlePosition = 0;
@@ -67,8 +68,22 @@ void newGame() {
   myDisplay.setTextSize(2);
   myDisplay.setTextColor(WHITE);
   myDisplay.setCursor(0, 0);
-  myDisplay.println("Pong start");
+  myDisplay.println("Pong Start");
   myDisplay.display();
+
+  tone(12,NOTE_E6,125);
+  delay(130);
+  tone(12,NOTE_G6,125);
+  delay(130);
+  tone(12,NOTE_E7,125);
+  delay(130);
+  tone(12,NOTE_C7,125);
+  delay(130);
+  tone(12,NOTE_D7,125);
+  delay(130);
+  tone(12,NOTE_G7,125);
+  delay(125);
+  noTone(12);
 
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
@@ -107,23 +122,28 @@ void gameOver() {
   myDisplay.display();
 
   setSprite(lose);
+
+  tone(12,246,250);
+  delay(200);
+  tone(12,174,250);
+  delay(400);
+  tone(12,174,250);
+  delay(200);
+  tone(12,174,250);
+  delay(200);
+  tone(12,164,250);
+  delay(200);
+  tone(12,146,250);
+  delay(200);
+  tone(12,130,250);
+
 }
 
 void sound() {
   if (score != prev_score) {
-    tone(BUZZER, FREQ0);
-    delay(50);
-    noTone(BUZZER);
+    tone(BUZZER, FREQ0, 50);
   }
   prev_score = score;
-
-  // if (is_gameover) {
-  //   for (int i = 0; i < sizeof(FREQ1); i++)
-  //   {
-  //     tone(BUZZER, FREQ1[i]);
-  //     delay(50);
-  //   }
-  // }
 }
 
 void setup() {
@@ -181,6 +201,7 @@ void loop() {
   if (ballX == 6 && ballY >= paddlePosition && ballY <= paddlePosition + 1) {
     ballSpeedX *= -1;
     score++;
+    BALL_DELAY -= 2;
   }
   
   // ボールが左端に当たった場合、ゲームオーバー
