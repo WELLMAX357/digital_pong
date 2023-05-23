@@ -7,7 +7,6 @@
 //　ブザー設定
 const int BUZZER = 12;
 int FREQ0 = 528; //　得点アップ
-int FREQ1[3] = {}; // ゲームオーバー
 
 // ドットLEDマトリックスのピン設定
 const int DIN_PIN = 8;  // データ入力
@@ -15,7 +14,6 @@ const int CLK_PIN = 10;  // クロック
 const int CS_PIN = 9;   // チップセレクト
 
 // ゲーム設定
-const int MATRIX_SIZE = 8;     // ドットLEDマトリックスのサイズ
 const int PADDLE_HEIGHT = 2;   // パドルの高さ
 int BALL_DELAY = 150;    // ボールの移動速度（ミリ秒）
 
@@ -60,6 +58,7 @@ void drawBall() {
   lc.setLed(0, ballX, ballY, true);
 }
 
+// ゲーム開始時の描画
 void newGame() {
   score = 0;
   Serial.println("Pong");
@@ -71,19 +70,19 @@ void newGame() {
   myDisplay.println("Pong Start");
   myDisplay.display();
 
-  tone(12,NOTE_E6,125);
+  tone(BUZZER,NOTE_E6,125);
   delay(130);
-  tone(12,NOTE_G6,125);
+  tone(BUZZER,NOTE_G6,125);
   delay(130);
-  tone(12,NOTE_E7,125);
+  tone(BUZZER,NOTE_E7,125);
   delay(130);
-  tone(12,NOTE_C7,125);
+  tone(BUZZER,NOTE_C7,125);
   delay(130);
-  tone(12,NOTE_D7,125);
+  tone(BUZZER,NOTE_D7,125);
   delay(130);
-  tone(12,NOTE_G7,125);
+  tone(BUZZER,NOTE_G7,125);
   delay(125);
-  noTone(12);
+  noTone(BUZZER);
 
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
@@ -99,6 +98,7 @@ void newGame() {
   myDisplay.display();
 }
 
+// 絵文字の描画
 void setSprite(byte *sprite)
 {
   for (int i = 0; i < 8; i++)
@@ -107,6 +107,7 @@ void setSprite(byte *sprite)
   }
 }
 
+// ゲームオーバー時の描画
 void gameOver() {
   Serial.println("GameOver");
   Serial.print("score: ");
@@ -123,22 +124,23 @@ void gameOver() {
 
   setSprite(lose);
 
-  tone(12,246,250);
+  tone(BUZZER,246,250);
   delay(200);
-  tone(12,174,250);
+  tone(BUZZER,174,250);
   delay(400);
-  tone(12,174,250);
+  tone(BUZZER,174,250);
   delay(200);
-  tone(12,174,250);
+  tone(BUZZER,174,250);
   delay(200);
-  tone(12,164,250);
+  tone(BUZZER,164,250);
   delay(200);
-  tone(12,146,250);
+  tone(BUZZER,146,250);
   delay(200);
-  tone(12,130,250);
+  tone(BUZZER,130,250);
 
 }
 
+// 点数上昇時のサウンド
 void sound() {
   if (score != prev_score) {
     tone(BUZZER, FREQ0, 50);
@@ -169,8 +171,7 @@ void setup() {
   randomSeed(analogRead(0));
   ballX = random(1, 3);
   ballY = random(1, 7);
-  do
-  {
+  do {
     ballSpeedX = random(-1, 2);
     ballSpeedY = random(-1, 2);
   } while (ballSpeedX == 0 || ballSpeedY == 0);
