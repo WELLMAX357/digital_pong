@@ -15,7 +15,7 @@ const int CS_PIN = 9;   // チップセレクト
 
 // ゲーム設定
 const int PADDLE_HEIGHT = 2;   // パドルの高さ
-int BALL_DELAY = 150;    // ボールの移動速度（ミリ秒）
+int BALL_DELAY = 160;    // ボールの移動速度（ミリ秒）
 
 // パドルの初期位置
 int paddlePosition = 0;
@@ -187,8 +187,17 @@ void loop() {
   // ボールの移動
   ballX += ballSpeedX;
   ballY += ballSpeedY;
-  Serial.println(ballY);
-  
+
+  Serial.print("x:");
+  Serial.print(ballX);
+  Serial.print(" y:");
+  Serial.print(ballY);
+  Serial.print(" speedX:");
+  Serial.print(ballSpeedX);
+  Serial.print(" speedY:");
+  Serial.print(ballSpeedY);
+  Serial.println();
+
   // ボールが上下の壁に当たった場合、反射する
   if (ballY == 0 || ballY == 7) {
     ballSpeedY *= -1;
@@ -208,8 +217,16 @@ void loop() {
     } else {
       // do nothing
     }
+
+    // fix bug
+    if (ballY == 7) {
+      ballSpeedY = -1;
+    } else if (ballY == 0) {
+      ballSpeedY = 1;
+    }
+
     score++;
-    BALL_DELAY -= 1;
+    BALL_DELAY -= 2;
   }
   
   // ボールが左端に当たった場合、ゲームオーバー
