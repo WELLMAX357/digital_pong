@@ -21,7 +21,7 @@ int BALL_DELAY = 150;    // ボールの移動速度（ミリ秒）
 int paddlePosition = 0;
 
 // ボールの初期位置と速度
-int ballX = 0;
+int ballX = 1;
 int ballY = 0;
 int ballSpeedX = 1;
 int ballSpeedY = 1;
@@ -169,7 +169,7 @@ void setup() {
 
   // ボールのランダム化
   randomSeed(analogRead(0));
-  ballX = random(1, 3);
+  // ballX = random(1, 3);
   ballY = random(1, 7);
   do {
     ballSpeedX = random(-1, 2);
@@ -187,26 +187,33 @@ void loop() {
   // ボールの移動
   ballX += ballSpeedX;
   ballY += ballSpeedY;
+  Serial.println(ballY);
   
   // ボールが上下の壁に当たった場合、反射する
-  if (ballY <= 0 || ballY >= 7) {
+  if (ballY == 0 || ballY == 7) {
     ballSpeedY *= -1;
   }
 
   // ボールが左の壁に当たった場合，反射する
-  if (ballX <= 0) {
+  if (ballX == 0) {
     ballSpeedX *= -1;
   }
 
   // ボールがパドルに当たった場合、反射する
   if (ballX == 6 && ballY >= paddlePosition && ballY <= paddlePosition + 1) {
     ballSpeedX *= -1;
+
+    if (random(0,2)) {
+      ballSpeedY *= -1;
+    } else {
+      // do nothing
+    }
     score++;
-    BALL_DELAY -= 2;
+    BALL_DELAY -= 1;
   }
   
   // ボールが左端に当たった場合、ゲームオーバー
-  if (ballX >= 7) {
+  if (ballX == 7) {
     ballSpeedX  = 0;
     ballSpeedY = 0;
     is_gameover = true;
